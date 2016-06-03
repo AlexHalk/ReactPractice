@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		React Practice
+	</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+
+</head>
+	<body>
+
+		<div id="app">
+		    <!-- This element's contents will be replaced with your component. -->
+		    <!--/* Need to make it so on click the name being entered gets put into the friends array. Now it changes from an array to string...bad... */-->
+		</div>
+
+
+<script type="text/babel">
+var MainContainer = React.createClass({
+    getInitialState: function(){
+      return {
+        name: 'JK_MNO',
+        friends: [], //friends is items
+        text: ''
+      }
+    },
+    handleChange: function(e){
+      //like the onChange function
+    	this.setState({
+    		text: e.target.value
+    	});
+    },
+    handleSubmit: function(e){
+      e.preventDefault();
+      if(this.state.text !== '') {
+        var nextfriend = this.state.friends.concat([{
+          text: this.state.text, id: Date.now()
+        }]);
+        var nextText = '';
+        this.setState({
+          friends: nextfriend, text: nextText
+        });
+
+      }
+    },
+    render: function(){
+      return (
+        <div>
+          <h3> Name: {this.state.name} </h3>
+          <ShowList friends={this.state.friends} />
+          <form onSubmit={this.handleSubmit} >
+              Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.text} />
+            </form> 
+        </div>
+      );
+    }
+});
+
+var ShowList = React.createClass({
+  render: function() {
+    var createFriend = function(friend) {
+      
+      return (
+        <li key={friend.id}>{friend.text} </li>
+        // console.log(this.props.friends)
+      );
+    };
+    return <ul>{this.props.friends.map(createFriend)}</ul>;
+  }
+});
+
+ReactDOM.render(<MainContainer />, document.getElementById('app'));
+</script>
+
+	</body>
+</html>
