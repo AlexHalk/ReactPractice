@@ -45,11 +45,19 @@ var MainContainer = React.createClass({
 
       }
     },
+    handleDelete: function(e){
+      var index = parseInt(e.target.value, 10);
+      console.log(index);
+      this.state.friends.splice (index, 1);
+      this.setState(state => {
+        friends: this.state.friends
+      });
+    },
     render: function(){
       return (
         <div>
           <h3> Name: {this.state.name} </h3>
-          <ShowList friends={this.state.friends} />
+          <ShowList friends={this.state.friends} handleDelete={this.handleDelete} />
           <form onSubmit={this.handleSubmit} >
               Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.text} />
             </form> 
@@ -61,13 +69,11 @@ var MainContainer = React.createClass({
 var ShowList = React.createClass({
   render: function() {
     var createFriend = function(friend) {
-      
       return (
-        <li key={friend.id}>{friend.text} </li>
-        // console.log(this.props.friends)
+        <li key={friend.id}>{friend.text} <button onClick={this.props.handleDelete} value={friend.id}>Delete</button> </li>
       );
     };
-    return <ul>{this.props.friends.map(createFriend)}</ul>;
+    return <ul>{this.props.friends.map(createFriend.bind(this))}</ul>;
   }
 });
 
