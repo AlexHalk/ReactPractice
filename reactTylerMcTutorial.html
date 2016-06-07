@@ -22,42 +22,65 @@ var MainContainer = React.createClass({
     getInitialState: function(){
       return {
         name: 'JK_MNO',
-        friends: [],
-        text: ''
+        friendsArray: [],
+        friendsName: ''
       }
     },
     handleChange: function(e){
     	this.setState({
-    		text: e.target.value
+    		friendsName: e.target.value
     	});
     },
     handleSubmit: function(e){
       e.preventDefault();
-      if(this.state.text !== '') {
-        var nextfriend = this.state.friends.concat([{
-          text: this.state.text, id: Date.now()
+      if(this.state.friendsName !== '') {
+        var nextfriend = this.state.friendsArray.concat([{
+          friendsName: this.state.friendsName, id: Date.now()
         }]);
         var nextText = '';
         this.setState({
-          friends: nextfriend, text: nextText
+          friendsArray: nextfriend, friendsName: nextText
         });
       }
     },
     handleDelete: function(e){
         var i = e.target.value;
-        var friendsCopy = this.state.friends;
+        var friendsCopy = this.state.friendsArray;
         this.setState(state => {
             friendsCopy.splice(i, 1);
-            friends: friendsCopy
+            friendsArray: friendsCopy
         });
+    },
+    handleSort: function(e){
+        // console.log(e);
+        var friendsCopy = this.state.friendsArray;
+        // friendsCopy.sort(function(a,b) {
+        //     return a-b
+        //     console.log(friendsCopy);
+        // });
+        friendsCopy = sortBy(this.state.friendsArray, 'friendsName', function(n){
+            return Math.sin(n);
+        });
+        // console.log(friendsCopy);
+        // for (var s = 0; s < friendsCopy.length - 1; s++){
+        //     // console.log(friendsCopy[s]);
+        //     if(friendsCopy[s] > friendsCopy[s+1]){
+        //         var temp = friendsCopy[s];
+        //         friendsCopy[s] = friendsCopy[s+1];
+        //         friendsCopy[s+1] = temp;
+        //         // s = s-2;
+        // console.log(s);
+        //     }
+        // }
+        // console.log(friendsCopy);
     },
     render: function(){
       return (
         <div>
           <h3> Name: {this.state.name} </h3>
-          <ShowList friends={this.state.friends} handleDelete={this.handleDelete} />
+          <ShowList friendsArray={this.state.friendsArray} handleDelete={this.handleDelete} handleSort={this.handleSort} />
           <form onSubmit={this.handleSubmit} >
-              Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.text} />
+              Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.friendsName} />
             </form> 
         </div>
       );
@@ -66,12 +89,12 @@ var MainContainer = React.createClass({
 
 var ShowList = React.createClass({
   render: function() {
-    var createFriend = function(friend, index) {
+    var createFriend = function(friendArray, index) {
        return (
-        <li key={friend.id}>{friend.text} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
+        <li key={friendArray.id}>{friendArray.friendsName} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
       );
     };
-    return <ul>{this.props.friends.map(createFriend.bind(this))}</ul>;
+    return <ul>{this.props.friendsArray.map(createFriend.bind(this))} <button onClick={this.props.handleSort}>Sort</button> </ul>;
   }
 });
 
