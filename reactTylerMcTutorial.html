@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>
-		React Practice
+		React Practice: Friends List
 	</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
@@ -13,21 +13,20 @@
 
 		<div id="app">
 		    <!-- This element's contents will be replaced with your component. -->
-		    <!--/* Need to make it so on click the name being entered gets put into the friends array. Now it changes from an array to string...bad... */-->
 		</div>
 
 
 <script type="text/babel">
+
 var MainContainer = React.createClass({
     getInitialState: function(){
       return {
         name: 'JK_MNO',
-        friends: [], //friends is items
+        friends: [],
         text: ''
       }
     },
     handleChange: function(e){
-      //like the onChange function
     	this.setState({
     		text: e.target.value
     	});
@@ -42,17 +41,15 @@ var MainContainer = React.createClass({
         this.setState({
           friends: nextfriend, text: nextText
         });
-
       }
     },
     handleDelete: function(e){
-      for (var i = this.state.friends.length - 1; i >= 0; i--) {
-        this.state.friends[i]
-      };
-      this.state.friends.splice(i, 1);
-      this.setState({
-        friends: this.state.friends
-      });
+        var i = e.target.value;
+        var friendsCopy = this.state.friends;
+        this.setState(state => {
+            friendsCopy.splice(i, 1);
+            friends: friendsCopy
+        });
     },
     render: function(){
       return (
@@ -69,9 +66,9 @@ var MainContainer = React.createClass({
 
 var ShowList = React.createClass({
   render: function() {
-    var createFriend = function(friend) {
-      return (
-        <li key={friend.id}>{friend.text} <button onClick={this.props.handleDelete} value={friend.id}>Delete</button> </li>
+    var createFriend = function(friend, index) {
+       return (
+        <li key={friend.id}>{friend.text} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
       );
     };
     return <ul>{this.props.friends.map(createFriend.bind(this))}</ul>;
