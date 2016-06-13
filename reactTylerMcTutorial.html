@@ -39,7 +39,8 @@ var MainContainer = React.createClass({
         }]);
         var nextText = '';
         this.setState({
-          friendsArray: nextfriend, friendsName: nextText
+          friendsArray: nextfriend, 
+          friendsName: nextText
         });
       }
     },
@@ -52,33 +53,34 @@ var MainContainer = React.createClass({
         });
     },
     handleSort: function(e){
-        // console.log(e);
         var friendsCopy = this.state.friendsArray;
-        // friendsCopy.sort(function(a,b) {
-        //     return a-b
-        //     console.log(friendsCopy);
-        // });
-        friendsCopy = sortBy(this.state.friendsArray, 'friendsName', function(n){
-            return Math.sin(n);
+        friendsCopy.sort(function(a,b) {
+          if(a.friendsName < b.friendsName) return -1;
+          if(a.friendsName > b.friendsName) return 1;
+          return 0;
         });
-        // console.log(friendsCopy);
-        // for (var s = 0; s < friendsCopy.length - 1; s++){
-        //     // console.log(friendsCopy[s]);
-        //     if(friendsCopy[s] > friendsCopy[s+1]){
-        //         var temp = friendsCopy[s];
-        //         friendsCopy[s] = friendsCopy[s+1];
-        //         friendsCopy[s+1] = temp;
-        //         // s = s-2;
-        // console.log(s);
-        //     }
-        // }
-        // console.log(friendsCopy);
+        this.setState({
+          friendsArray: friendsCopy
+        });
+    },
+    handleBinaryChange: function(e){
+      var friendsCopy = this.state.friendsArray;
+      for(var i=0; i<friendsCopy.length; i++){
+        for(var j=0; j<friendsCopy[i].friendsName.length; j++){
+          var friendsNameCopy = friendsCopy[i].friendsName
+          var binaryFriends = [friendsNameCopy[j].charCodeAt(0).toString(2) + " "];
+        }
+      }
+      console.log(friendsCopy);
+      this.setState({
+        friendsArray: binaryFriends
+      });
     },
     render: function(){
       return (
         <div>
           <h3> Name: {this.state.name} </h3>
-          <ShowList friendsArray={this.state.friendsArray} handleDelete={this.handleDelete} handleSort={this.handleSort} />
+          <ShowList friendsArray={this.state.friendsArray} handleDelete={this.handleDelete} handleSort={this.handleSort} handleBinaryChange={this.handleBinaryChange} />
           <form onSubmit={this.handleSubmit} >
               Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.friendsName} />
             </form> 
@@ -94,7 +96,7 @@ var ShowList = React.createClass({
         <li key={friendArray.id}>{friendArray.friendsName} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
       );
     };
-    return <ul>{this.props.friendsArray.map(createFriend.bind(this))} <button onClick={this.props.handleSort}>Sort</button> </ul>;
+    return <ul>{this.props.friendsArray.map(createFriend.bind(this))} <button id="sortButton" onClick={this.props.handleSort}>Sort Alphabetically</button> <button onClick={this.props.handleBinaryChange}>Change to Binary</button> </ul>;
   }
 });
 
