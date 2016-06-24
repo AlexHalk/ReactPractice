@@ -4,7 +4,8 @@
 	<title>
 		React Practice: Friends List
 	</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 
@@ -23,13 +24,19 @@ var MainContainer = React.createClass({
       return {
         name: 'JK_MNO',
         friendsArray: [],
-        friendsName: ''
+        friendsName: '',
+        friendFrom: ''
       }
     },
     handleChange: function(e){
     	this.setState({
     		friendsName: e.target.value
     	});
+    },
+    handleChangeFrom: function(a){
+      this.setState({
+        friendFrom: a.target.value
+      }); 
     },
     handleSubmit: function(e){
       e.preventDefault();
@@ -40,7 +47,7 @@ var MainContainer = React.createClass({
         var nextText = '';
         this.setState({
           friendsArray: nextfriend, 
-          friendsName: nextText
+          friendsName: nextText,
         });
       }
     },
@@ -66,14 +73,17 @@ var MainContainer = React.createClass({
     handleBinaryChange: function(e){
       var friendsCopy = this.state.friendsArray;
       for(var i=0; i<friendsCopy.length; i++){
-        for(var j=0; j<friendsCopy[i].friendsName.length; j++){
-          var friendsNameCopy = friendsCopy[i].friendsName
-          var binaryFriends = [friendsNameCopy[j].charCodeAt(0).toString(2) + " "];
-        }
-      }
-      console.log(friendsCopy);
+        var test = friendsCopy[i].friendsName.length;
+        for(var j=0; j<test; j++){
+          if(friendsCopy[i].friendsName[j].charCodeAt(0).toString(2)){
+            console.log('Apple');
+          } else {
+            console.log(friendsCopy[i].friendsName += " " + friendsCopy[i].friendsName[j].charCodeAt(0).toString(2) + " ");
+          }
+        }//End of 'j' for
+      }//End of 'i' for
       this.setState({
-        friendsArray: binaryFriends
+        friendsArray: friendsCopy //make friendsCopy contain the new value for friendsName
       });
     },
     render: function(){
@@ -83,7 +93,7 @@ var MainContainer = React.createClass({
           <ShowList friendsArray={this.state.friendsArray} handleDelete={this.handleDelete} handleSort={this.handleSort} handleBinaryChange={this.handleBinaryChange} />
           <form onSubmit={this.handleSubmit} >
               Enter Friends: <input className="friendInput" onChange={this.handleChange} value={this.state.friendsName} />
-            </form> 
+          </form> 
         </div>
       );
     }
@@ -93,7 +103,7 @@ var ShowList = React.createClass({
   render: function() {
     var createFriend = function(friendArray, index) {
        return (
-        <li key={friendArray.id}>{friendArray.friendsName} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
+        <li key={friendArray.id}>{friendArray.friendsName}{friendArray.friendFrom} <button onClick={this.props.handleDelete} value={index}>Delete</button> </li>
       );
     };
     return <ul>{this.props.friendsArray.map(createFriend.bind(this))} <button id="sortButton" onClick={this.props.handleSort}>Sort Alphabetically</button> <button onClick={this.props.handleBinaryChange}>Change to Binary</button> </ul>;
